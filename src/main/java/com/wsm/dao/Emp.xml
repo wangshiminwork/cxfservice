@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wsm.dao.IEmpDAO">
+<select id="findAll" resultMap="empmap">
+	select * from emp
+</select>
+<select id="findById" resultMap="empmap" parameterType="Integer">
+	select * from emp where empno=#{empno}
+</select>
+<delete id="delete" parameterType="Integer">
+	delete from emp where empno=#{empno}
+</delete>
+<update id="update" parameterType="Emp">
+	update emp set ename=#{ename},job=#{job},mgr=#{mgr},hiredate=#{hiredate},sal=#{sal},comm=#{comm},deptno=#{d.deptno} where empno=#{empno}
+</update>
+<insert id="save" parameterType="Emp">
+	insert into emp values(#{empno},#{ename},#{job},#{mgr},#{hiredate},#{sal},#{comm},#{d.deptno})
+</insert>
+<resultMap type="Emp" id="empmap" autoMapping="false">
+	<id column="EMPNO" property="empno"/>
+	<result column="ENAME" property="ename"/>
+	<result column="JOB" property="job"/>
+	<result column="MGR" property="mgr"/>
+	<result column="HIREDATE" property="hiredate"/>
+	<result column="SAL" property="sal"/>
+	<result column="COMM" property="comm"/>
+	<association property="d" column="DEPTNO" javaType="Dept" select="findDeptByEmp">
+		<id column="DEPTNO" property="deptno"/>
+		<result column="DNAME" property="dname"/>
+		<result column="LOC" property="loc"/>	
+	</association>
+</resultMap>
+<select id="findDeptByEmp" resultType="Dept" parameterType="Integer">
+	select * from dept where deptno=#{deptno}
+</select>
+</mapper>
